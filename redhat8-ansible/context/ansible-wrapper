@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+COL_RED='\033[0;31m'
+COL_GREEN='\033[0;32m'
+COL_N='\033[0m'
+REQ_FILES=$(find /ansible_workspace -regex ".*requirements\.\(yaml\|yml\)")
+
+for item in $REQ_FILES; do
+    echo "Installing requirements from file $item"
+    ansible-galaxy install -r "$item"
+done
+
+echo '++ Starting test phase ++'
+echo "Running playbook $PLAYBOOK_PATH"
+if ansible-playbook "/ansible_workspace/${PLAYBOOK_PATH}"; then
+    echo -e "++ ${COL_GREEN}Test phase finished with status SUCCESS!${COL_N} ++"
+else
+    
+    echo -e "++ ${COL_RED}Test phase finished with status FAILED!${COL_N} ++"
+fi
