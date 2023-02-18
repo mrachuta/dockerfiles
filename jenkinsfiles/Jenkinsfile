@@ -11,6 +11,15 @@ pipeline {
                    - "sleep"
                   args:
                     - "999999"
+                  securityContext:
+                    capabilities:
+                      add:
+                        - "CHOWN"
+                        - "DAC_OVERRIDE"
+                        - "FOWNER"
+                        - "SETFCAP"
+                        - "SETGID"
+                        - "SETUID"
                   volumeMounts:
                     - name: registry-credentials
                       mountPath: /kaniko/.docker
@@ -20,7 +29,7 @@ pipeline {
                   secret:
                     secretName: nexus3-k8s-lan-credentials
                     items:
-                      - key: .dockerconfigjson
+                      - key: config.json
                         path: config.json
             '''
             defaultContainer 'kaniko'
@@ -88,7 +97,7 @@ pipeline {
                     sh """
                         /kaniko/executor --dockerfile="${DOCKERFILE_TO_BUILD}/Dockerfile" \
                         --destination="${PRIVATE_REGISTRY_ADDRESS}/${IMAGE_NAME_AND_TAG}" \
-                        ${CONTEXT_PATH_ARG} --insecure
+                        ${CONTEXT_PATH_ARG} --insecure --insecure-pull
                     """
                 }
             }
