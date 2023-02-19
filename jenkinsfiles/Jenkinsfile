@@ -46,6 +46,9 @@ pipeline {
                   args:
                     - "999999"
                   securityContext:
+                    privileged: true
+                    runAsUser: 1000
+                    fsGroup: 1000
                     capabilities:
                       add:
                         - "CHOWN"
@@ -108,7 +111,6 @@ pipeline {
         )
     }
     stages {
-        /* Enable stage if you are not using multibranch pipeline
         stage('Pull Repository') {
             steps {
                 git(
@@ -117,7 +119,6 @@ pipeline {
                 )
             }
         }
-        */
         stage('Build image') {
             steps {
                 script {
