@@ -1,3 +1,36 @@
+properties([
+    parameters([
+        [$class: 'DynamicReferenceParameter',
+            omitValueField: true,
+            choiceType: 'ET_FORMATTED_HTML',
+            description: 'Define context path',
+            name: 'CONTEXT_PATH',
+            referencedParameters: 'DOCKERFILE_TO_BUILD,CONTEXT_REQUIRED',
+            script: [
+                $class: 'GroovyScript',
+                fallbackScript: [
+                    classpath: [],
+                    sandbox: false,
+                    script:
+                        "return 'Could not get the services list'"
+                ],
+                script: [
+                    classpath: [],
+                    sandbox: false,
+                    script:
+                    '''
+                    if (CONTEXT_REQUIRED) {
+                        return "<input name='value' type='text' value='${DOCKERFILE_TO_BUILD}/' class='setting-input'>"
+                    } else {
+                        return "<p>Field disabled</p>"
+                    }
+                    '''.stripIndent().trim()
+                ]
+            ]
+        ]
+    ])
+])
+
 pipeline {
     agent {
         kubernetes {
@@ -68,12 +101,16 @@ pipeline {
             name: 'IMAGE_NAME_AND_TAG',
             trim: true
         )
-        string(
-            defaultValue: '',
-            description: 'Path to context in repository if required by Dockerfile; leave empty if not required',
-            name: 'CONTEXT_PATH',
-            trim: true
+        booleanParam(
+            description: 'Is context required to build image?',
+            name: 'CONTEXT_REQUIRED'
         )
+        // string(
+        //     defaultValue: '',
+        //     description: 'Path to context in repository if required by Dockerfile; leave empty if not required',
+        //     name: 'CONTEXT_PATH',
+        //     trim: true
+        // )
     }
     stages {
         /* Enable stage if you are not using multibranch pipeline
