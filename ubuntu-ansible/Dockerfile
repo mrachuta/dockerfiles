@@ -7,8 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 ADD --chown=root:root context /tmp/docker
 
-RUN ls /tmp -all && \
-    apt update && \
+RUN apt update && \
     apt install -y software-properties-common sudo && \
     add-apt-repository ppa:deadsnakes/ppa && \ 
     apt update && \
@@ -25,7 +24,8 @@ RUN ls /tmp -all && \
     mv /tmp/docker/ansible.cfg /home/ansible/.ansible.cfg && \
     mv /tmp/docker/ansible-wrapper /usr/bin/ansible-wrapper && \
     chown ansible:ansible /home/ansible/default_inventory.yaml /home/ansible/.ansible.cfg /usr/bin/ansible-wrapper && \
-    chmod +x /usr/bin/ansible-wrapper
+    chmod +x /usr/bin/ansible-wrapper && \
+    rm -Rf /tmp/docker
 
 USER ansible
 

@@ -15,6 +15,5 @@ echo "Running playbook $PLAYBOOK_PATH"
 if ansible-playbook "/ansible_workspace/${PLAYBOOK_PATH}"; then
     echo -e "++ ${COL_GREEN}Test phase finished with status SUCCESS!${COL_N} ++"
 else
-    
     echo -e "++ ${COL_RED}Test phase finished with status FAILED!${COL_N} ++"
 fi
