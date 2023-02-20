@@ -5,10 +5,9 @@ LABEL maintainer="mrachuta"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-ADD context /tmp
+ADD --chown root:root context /tmp
 
-RUN ls /tmp -all && \
-    apt update && \
+RUN apt update && \
     apt install -y software-properties-common sudo && \
     add-apt-repository ppa:deadsnakes/ppa && \ 
     apt update && \
