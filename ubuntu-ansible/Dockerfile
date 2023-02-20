@@ -7,7 +7,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 ADD context /tmp
 
-RUN apt update && \
+RUN ls /tmp -all && \
+    apt update && \
     apt install -y software-properties-common sudo && \
     add-apt-repository ppa:deadsnakes/ppa && \ 
     apt update && \
