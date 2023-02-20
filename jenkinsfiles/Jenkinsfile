@@ -46,9 +46,6 @@ pipeline {
                   args:
                     - "999999"
                   securityContext:
-                    privileged: true
-                    runAsUser: 1000
-                    fsGroup: 1000
                     capabilities:
                       add:
                         - "CHOWN"
@@ -69,7 +66,6 @@ pipeline {
                       - key: config.json
                         path: config.json
             '''
-            defaultContainer 'kaniko'
         }
     }
     options {
@@ -111,6 +107,7 @@ pipeline {
         )
     }
     stages {
+        /* Enable stage if you are not using multibranch pipeline
         stage('Pull Repository') {
             steps {
                 git(
@@ -119,19 +116,22 @@ pipeline {
                 )
             }
         }
+        */
         stage('Build image') {
             steps {
-                script {
-                    if (!env.CONTEXT_REQUIRED || env.CONTEXT_PATH.length() == 0) {
-                        env.CONTEXT_PATH_ARG = ''
-                    } else {
-                        env.CONTEXT_PATH_ARG = "--context=dir://${env.CONTEXT_PATH}"
+                container('kaniko') {
+                    script {
+                        if (!env.CONTEXT_REQUIRED || env.CONTEXT_PATH.length() == 0) {
+                            env.CONTEXT_PATH_ARG = ''
+                        } else {
+                            env.CONTEXT_PATH_ARG = "--context=dir://${env.CONTEXT_PATH}"
+                        }
+                        sh """
+                            /kaniko/executor --dockerfile="${DOCKERFILE_TO_BUILD}/Dockerfile" \
+                            --destination="${PRIVATE_REGISTRY_ADDRESS}/${IMAGE_NAME_AND_TAG}" \
+                            ${CONTEXT_PATH_ARG} --insecure --insecure-pull
+                        """
                     }
-                    sh """
-                        /kaniko/executor --dockerfile="${DOCKERFILE_TO_BUILD}/Dockerfile" \
-                        --destination="${PRIVATE_REGISTRY_ADDRESS}/${IMAGE_NAME_AND_TAG}" \
-                        ${CONTEXT_PATH_ARG} --insecure --insecure-pull
-                    """
                 }
             }
         }
