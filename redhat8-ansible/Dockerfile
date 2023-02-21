@@ -5,8 +5,7 @@ LABEL maintainer="mrachuta"
 
 ADD --chown=root:root context /tmp/docker
 
-RUN dnf update && \
-    dnf -y module enable python39 && \
+RUN dnf -y module enable python39 && \
     dnf -y module install python39 && \
     dnf -y install sudo && \
     dnf -y autoremove && \
