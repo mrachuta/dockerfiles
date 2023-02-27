@@ -15,9 +15,8 @@ done
 echo '++ Starting test phase ++'
 echo 'Starting following ansible command:'
 echo "ansible-playbook \"/ansible_workspace/${PLAYBOOK_PATH}\" $ANSIBLE_ADDITIONAL_PARAMS"
-if ansible-playbook "/ansible_workspace/${PLAYBOOK_PATH}" $ANSIBLE_ADDITIONAL_PARAMS; then
-    echo -e "++ ${COL_GREEN}Test phase finished with status SUCCESS!${COL_N} ++"
-else
+if ! ansible-playbook "/ansible_workspace/${PLAYBOOK_PATH}" $ANSIBLE_ADDITIONAL_PARAMS; then
     echo -e "++ ${COL_RED}Test phase finished with status FAILED!${COL_N} ++"
     exit 1
 fi
+echo -e "++ ${COL_GREEN}Test phase finished with status SUCCESS!${COL_N} ++"
