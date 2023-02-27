@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euf -o pipefail
+
 COL_RED='\033[0;31m'
 COL_GREEN='\033[0;32m'
 COL_N='\033[0m'
