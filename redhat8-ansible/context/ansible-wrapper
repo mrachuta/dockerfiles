@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euf -o pipefail
+
 COL_RED='\033[0;31m'
 COL_GREEN='\033[0;32m'
 COL_N='\033[0m'
@@ -11,10 +13,10 @@ for item in $REQ_FILES; do
 done
 
 echo '++ Starting test phase ++'
-echo "Running playbook $PLAYBOOK_PATH"
-if ansible-playbook "/ansible_workspace/${PLAYBOOK_PATH}"; then
-    echo -e "++ ${COL_GREEN}Test phase finished with status SUCCESS!${COL_N} ++"
-else
-    
+echo 'Starting following ansible command:'
+echo "ansible-playbook \"/ansible_workspace/${PLAYBOOK_PATH}\" $ANSIBLE_ADDITIONAL_PARAMS"
+if ! ansible-playbook "/ansible_workspace/${PLAYBOOK_PATH}" $ANSIBLE_ADDITIONAL_PARAMS; then
     echo -e "++ ${COL_RED}Test phase finished with status FAILED!${COL_N} ++"
+    exit 1
 fi
+echo -e "++ ${COL_GREEN}Test phase finished with status SUCCESS!${COL_N} ++"

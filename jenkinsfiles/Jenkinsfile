@@ -1,3 +1,37 @@
+properties([
+    parameters([
+        [$class: 'DynamicReferenceParameter',
+            omitValueField: true,
+            choiceType: 'ET_FORMATTED_HTML',
+            description: 'Define context path',
+            name: 'CONTEXT_PATH',
+            referencedParameters: 'DOCKERFILE_TO_BUILD,CONTEXT_REQUIRED',
+            script: [
+                $class: 'GroovyScript',
+                fallbackScript: [
+                    classpath: [],
+                    sandbox: false,
+                    script:
+                        "return 'Could not get the services list'"
+                ],
+                script: [
+                    classpath: [],
+                    sandbox: false,
+                    script:
+                    // Remove whitespaces and hidden chars
+                    '''
+                    if (CONTEXT_REQUIRED) {
+                        return "<input name='value' type='text' value='${DOCKERFILE_TO_BUILD}/' class='setting-input'>"
+                    } else {
+                        return "<p>Field disabled</p>"
+                    }
+                    '''.stripIndent().trim()
+                ]
+            ]
+        ]
+    ])
+])
+
 pipeline {
     agent {
         kubernetes {
@@ -11,6 +45,15 @@ pipeline {
                    - "sleep"
                   args:
                     - "999999"
+                  securityContext:
+                    capabilities:
+                      add:
+                        - "CHOWN"
+                        - "DAC_OVERRIDE"
+                        - "FOWNER"
+                        - "SETFCAP"
+                        - "SETGID"
+                        - "SETUID"
                   volumeMounts:
                     - name: registry-credentials
                       mountPath: /kaniko/.docker
@@ -20,10 +63,9 @@ pipeline {
                   secret:
                     secretName: nexus3-k8s-lan-credentials
                     items:
-                      - key: .dockerconfigjson
+                      - key: config.json
                         path: config.json
             '''
-            defaultContainer 'kaniko'
         }
     }
     options {
@@ -44,10 +86,24 @@ pipeline {
     }
     parameters {
         choice(
-            choices: ['python-webdev', 'jenkins-customagent'], description: 'Select Dockerfile to build', name: 'DOCKERFILE_TO_BUILD'
+            choices: [
+                'python-webdev',
+                'jenkins-customagent',
+                'redhat8-ansible',
+                'ubuntu-ansible'
+            ],
+            description: 'Select Dockerfile to build',
+            name: 'DOCKERFILE_TO_BUILD'
         )
         string(
-            defaultValue: 'myimage:example', description: 'Name of output image in format image:tag', name: 'IMAGE_NAME_AND_TAG', trim: true
+            defaultValue: 'myimage:example',
+            description: 'Name of output image in format image:tag',
+            name: 'IMAGE_NAME_AND_TAG',
+            trim: true
+        )
+        booleanParam(
+            description: 'Is context required to build image?',
+            name: 'CONTEXT_REQUIRED'
         )
     }
     stages {
@@ -55,7 +111,7 @@ pipeline {
         stage('Pull Repository') {
             steps {
                 git(
-                    credentialsId: 'github-access-token-mrachuta', 
+                    credentialsId: 'github-access-token-mrachuta',
                     url: 'https://github.com/mrachuta/dockerfiles.git'
                 )
             }
@@ -63,11 +119,20 @@ pipeline {
         */
         stage('Build image') {
             steps {
-                sh """
-                /kaniko/executor --dockerfile="${DOCKERFILE_TO_BUILD}/Dockerfile" \
-                --destination="${PRIVATE_REGISTRY_ADDRESS}/${IMAGE_NAME_AND_TAG}" \
-                --insecure
-                """
+                container('kaniko') {
+                    script {
+                        if (!env.CONTEXT_REQUIRED || env.CONTEXT_PATH.length() == 0) {
+                            env.CONTEXT_PATH_ARG = ''
+                        } else {
+                            env.CONTEXT_PATH_ARG = "--context=dir://${env.CONTEXT_PATH}"
+                        }
+                        sh """
+                            /kaniko/executor --dockerfile="${DOCKERFILE_TO_BUILD}/Dockerfile" \
+                            --destination="${PRIVATE_REGISTRY_ADDRESS}/${IMAGE_NAME_AND_TAG}" \
+                            ${CONTEXT_PATH_ARG} --insecure --insecure-pull
+                        """
+                    }
+                }
             }
         }
     }

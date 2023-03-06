@@ -3,10 +3,9 @@ FROM nexus3.k8s.lan:50001/redhat/ubi8:8.7
 LABEL version="1.0"
 LABEL maintainer="mrachuta"
 
-ADD context /tmp
+ADD --chown=root:root context /tmp/docker
 
-RUN dnf update && \
-    dnf -y module enable python39 && \
+RUN dnf -y module enable python39 && \
     dnf -y module install python39 && \
     dnf -y install sudo && \
     dnf -y autoremove && \
@@ -19,11 +18,12 @@ RUN dnf update && \
     useradd -m -u 1000 -s /bin/bash ansible && \
     usermod -aG wheel ansible && \
     echo '%wheel ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers.d/passwordless_sudo && \
-    mv /tmp/default_inventory.yaml /home/ansible/default_inventory.yaml && \
-    mv /tmp/ansible.cfg /home/ansible/.ansible.cfg && \
-    mv /tmp/ansible-wrapper /usr/bin/ansible-wrapper && \
+    mv /tmp/docker/default_inventory.yaml /home/ansible/default_inventory.yaml && \
+    mv /tmp/docker/ansible.cfg /home/ansible/.ansible.cfg && \
+    mv /tmp/docker/ansible-wrapper /usr/bin/ansible-wrapper && \
     chown ansible:ansible /home/ansible/default_inventory.yaml /home/ansible/.ansible.cfg /usr/bin/ansible-wrapper && \
-    chmod +x /usr/bin/ansible-wrapper
+    chmod +x /usr/bin/ansible-wrapper && \
+    rm -Rf /tmp/docker
 
 USER ansible
 
