@@ -34,39 +34,7 @@ properties([
 
 pipeline {
     agent {
-        kubernetes {
-            inheritFrom 'default'
-            yaml '''
-            spec:
-              containers:
-                - name: kaniko
-                  image: gcr.io/kaniko-project/executor:debug
-                  command:
-                   - "sleep"
-                  args:
-                    - "999999"
-                  securityContext:
-                    capabilities:
-                      add:
-                        - "CHOWN"
-                        - "DAC_OVERRIDE"
-                        - "FOWNER"
-                        - "SETFCAP"
-                        - "SETGID"
-                        - "SETUID"
-                  volumeMounts:
-                    - name: registry-credentials
-                      mountPath: /kaniko/.docker
-              restartPolicy: Never
-              volumes:
-                - name: registry-credentials
-                  secret:
-                    secretName: nexus3-k8s-lan-credentials
-                    items:
-                      - key: config.json
-                        path: config.json
-            '''
-        }
+        label 'kaniko'
     }
     options {
         buildDiscarder(
@@ -89,6 +57,8 @@ pipeline {
             choices: [
                 'python-webdev',
                 'jenkins-customagent',
+                'jenkins-agent-azure',
+                'jenkins-agent-gcp',
                 'redhat8-ansible',
                 'ubuntu-ansible'
             ],
