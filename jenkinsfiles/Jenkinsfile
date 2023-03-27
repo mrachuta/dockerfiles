@@ -55,10 +55,11 @@ pipeline {
     parameters {
         choice(
             choices: [
-                'python-webdev',
-                'jenkins-customagent',
                 'jenkins-agent-azure',
                 'jenkins-agent-gcp',
+                'jenkins-agent-python',
+                'jenkins-customnode',
+                'python-webdev',
                 'redhat8-ansible',
                 'ubuntu-ansible'
             ],
