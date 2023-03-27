@@ -34,39 +34,7 @@ properties([
 
 pipeline {
     agent {
-        kubernetes {
-            inheritFrom 'default'
-            yaml '''
-            spec:
-              containers:
-                - name: kaniko
-                  image: gcr.io/kaniko-project/executor:debug
-                  command:
-                   - "sleep"
-                  args:
-                    - "999999"
-                  securityContext:
-                    capabilities:
-                      add:
-                        - "CHOWN"
-                        - "DAC_OVERRIDE"
-                        - "FOWNER"
-                        - "SETFCAP"
-                        - "SETGID"
-                        - "SETUID"
-                  volumeMounts:
-                    - name: registry-credentials
-                      mountPath: /kaniko/.docker
-              restartPolicy: Never
-              volumes:
-                - name: registry-credentials
-                  secret:
-                    secretName: nexus3-k8s-lan-credentials
-                    items:
-                      - key: config.json
-                        path: config.json
-            '''
-        }
+        label 'kaniko'
     }
     options {
         buildDiscarder(
@@ -87,8 +55,11 @@ pipeline {
     parameters {
         choice(
             choices: [
+                'jenkins-agent-azure',
+                'jenkins-agent-gcp',
+                'jenkins-agent-python',
+                'jenkins-customnode',
                 'python-webdev',
-                'jenkins-customagent',
                 'redhat8-ansible',
                 'ubuntu-ansible'
             ],
@@ -121,7 +92,7 @@ pipeline {
             steps {
                 container('kaniko') {
                     script {
-                        if (!env.CONTEXT_REQUIRED || env.CONTEXT_PATH.length() == 0) {
+                        if (!env.CONTEXT_REQUIRED && env.CONTEXT_PATH.isEmpty()) {
                             env.CONTEXT_PATH_ARG = ''
                         } else {
                             env.CONTEXT_PATH_ARG = "--context=dir://${env.CONTEXT_PATH}"
