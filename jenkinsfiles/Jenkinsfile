@@ -91,7 +91,7 @@ pipeline {
             steps {
                 container('kaniko') {
                     script {
-                        if (!env.CONTEXT_REQUIRED || env.CONTEXT_PATH.length() == 0) {
+                        if (!env.CONTEXT_REQUIRED && env.CONTEXT_PATH.isEmpty()) {
                             env.CONTEXT_PATH_ARG = ''
                         } else {
                             env.CONTEXT_PATH_ARG = "--context=dir://${env.CONTEXT_PATH}"
