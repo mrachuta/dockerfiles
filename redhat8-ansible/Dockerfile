@@ -18,6 +18,7 @@ RUN dnf -y module enable python39 && \
     useradd -m -u 1000 -s /bin/bash ansible && \
     usermod -aG wheel ansible && \
     echo '%wheel ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers.d/passwordless_sudo && \
+    chmod 600 /etc/sudoers.d/passwordless_sudo && \
     mv /tmp/docker/default_inventory.yaml /home/ansible/default_inventory.yaml && \
     mv /tmp/docker/ansible.cfg /home/ansible/.ansible.cfg && \
     mv /tmp/docker/ansible-wrapper /usr/bin/ansible-wrapper && \
