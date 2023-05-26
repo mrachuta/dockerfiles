@@ -16,7 +16,7 @@ RUN apt update && \
     apt autoremove -y && \
     apt clean -y && \
     update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
-    pip install ansible-core==2.12 mitogen==0.3.3 && \
+    pip install ansible-core==2.14 mitogen==0.3.3 && \
     useradd -m -u 1000 -s /bin/bash ansible && \
     usermod -aG sudo ansible && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers.d/passwordless_sudo && \
