@@ -3,7 +3,8 @@ FROM nexus3.k8s.lan:50001/ubuntu:jammy
 LABEL version="1.0"
 LABEL maintainer="mrachuta"
 
-ENV DEBIAN_FRONTEND=noninteractive
+# https://github.com/moby/moby/issues/4032#issuecomment-192327844
+ARG DEBIAN_FRONTEND=noninteractive
 
 ADD --chown=root:root context /tmp/docker
 
