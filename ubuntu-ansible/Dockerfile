@@ -8,6 +8,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 ADD --chown=root:root context /tmp/docker
 
+# sudoers change is intentional;
+# it's required for ansible and sudo access
 RUN apt update && \
     apt install -y software-properties-common sudo && \
     add-apt-repository ppa:deadsnakes/ppa && \ 

@@ -5,6 +5,8 @@ LABEL maintainer="mrachuta"
 
 ADD --chown=root:root context /tmp/docker
 
+# sudoers change is intentional;
+# it's required for ansible and sudo access
 RUN dnf -y module enable python39 && \
     dnf -y module install python39 && \
     dnf -y install sudo && \
