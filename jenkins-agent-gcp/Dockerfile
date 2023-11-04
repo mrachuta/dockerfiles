@@ -14,19 +14,19 @@ RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl}' && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0-25ubuntu1_amd64.deb \
     -o /tmp/unzip_6.0-25ubuntu1_amd64.deb && \
     dpkg -i /tmp/unzip_6.0-25ubuntu1_amd64.deb && \
-    curl -L https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-422.0.0-linux-x86_64.tar.gz \
-    -o /tmp/google-cloud-cli-422.0.0-linux-x86_64.tar.gz && \
-    tar -xf /tmp/google-cloud-cli-422.0.0-linux-x86_64.tar.gz -C /opt/tools/ && \
-    curl -L https://releases.hashicorp.com/packer/1.8.6/packer_1.8.6_linux_amd64.zip \
-    -o /tmp/packer_1.8.6_linux_amd64.zip && \
-    unzip /tmp/packer_1.8.6_linux_amd64.zip -d /opt/tools/packer/ && \
-    curl -L https://releases.hashicorp.com/terraform/1.4.1/terraform_1.4.1_linux_amd64.zip \
-    -o /tmp/terraform_1.4.1_linux_amd64.zip && \
-    unzip /tmp/terraform_1.4.1_linux_amd64.zip -d /opt/tools/terraform/ && \
-    curl -L https://get.helm.sh/helm-v3.11.2-linux-amd64.tar.gz \
-    -o /tmp/helm-v3.11.2-linux-amd64.tar.gz && \
-    tar -xf /tmp/helm-v3.11.2-linux-amd64.tar.gz -C /opt/tools/helm/ && \
-    curl -L https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl \
+    curl -L https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-452.0.1-linux-x86_64.tar.gz \
+    -o /tmp/google-cloud-cli-452.0.1-linux-x86_64.tar.gz && \
+    tar -xf /tmp/google-cloud-cli-452.0.1-linux-x86_64.tar.gz -C /opt/tools/ && \
+    curl -L https://releases.hashicorp.com/packer/1.9.4/packer_1.9.4_linux_amd64.zip \
+    -o /tmp/packer_1.9.4_linux_amd64.zip && \
+    unzip /tmp/packer_1.9.4_linux_amd64.zip -d /opt/tools/packer/ && \
+    curl -L https://releases.hashicorp.com/terraform/1.6.2/terraform_1.6.2_linux_amd64.zip \
+    -o /tmp/terraform_1.6.2_linux_amd64.zip && \
+    unzip /tmp/terraform_1.6.2_linux_amd64.zip -d /opt/tools/terraform/ && \
+    curl -L https://get.helm.sh/helm-v3.13.1-linux-amd64.tar.gz \
+    -o /tmp/helm-v3.13.1-linux-amd64.tar.gz && \
+    tar -xf /tmp/helm-v3.13.1-linux-amd64.tar.gz -C /opt/tools/helm/ && \
+    curl -L https://dl.k8s.io/release/v1.28.3/bin/linux/amd64/kubectl \
     -o /opt/tools/kubectl/kubectl && \
     chmod +x /opt/tools/kubectl/kubectl && \
     chown -R jenkins:jenkins /opt/tools && \

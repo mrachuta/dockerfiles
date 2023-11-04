@@ -6,7 +6,7 @@ LABEL maintainer="mrachuta"
 USER root
 
 RUN apt update -y && \
-    apt install -y python3.9 python3-pip && \
+    apt install -y python3.11 python3-pip && \
     apt autoremove -y && \
     apt clean -y
 

@@ -3,10 +3,13 @@ FROM nexus3.k8s.lan:50001/ubuntu:jammy
 LABEL version="1.0"
 LABEL maintainer="mrachuta"
 
-ENV DEBIAN_FRONTEND=noninteractive
+# https://github.com/moby/moby/issues/4032#issuecomment-192327844
+ARG DEBIAN_FRONTEND=noninteractive
 
 ADD --chown=root:root context /tmp/docker
 
+# sudoers change is intentional;
+# it's required for ansible and sudo access
 RUN apt update && \
     apt install -y software-properties-common sudo && \
     add-apt-repository ppa:deadsnakes/ppa && \ 
@@ -16,10 +19,11 @@ RUN apt update && \
     apt autoremove -y && \
     apt clean -y && \
     update-alternatives --install /usr/bin/python python /usr/bin/python3.11 1 && \
-    pip install ansible-core==2.12 mitogen==0.3.3 && \
+    pip install ansible-core==2.14 && \
     useradd -m -u 1000 -s /bin/bash ansible && \
     usermod -aG sudo ansible && \
     echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers.d/passwordless_sudo && \
+    chmod 600 /etc/sudoers.d/passwordless_sudo && \
     mv /tmp/docker/default_inventory.yaml /home/ansible/default_inventory.yaml && \
     mv /tmp/docker/ansible.cfg /home/ansible/.ansible.cfg && \
     mv /tmp/docker/ansible-wrapper /usr/bin/ansible-wrapper && \
