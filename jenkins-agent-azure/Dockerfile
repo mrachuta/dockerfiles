@@ -8,9 +8,7 @@ USER root
 ENV PATH="/opt/tools/terraform:/opt/tools/packer:/opt/tools/helm/linux-amd64:\
 /opt/tools/kubectl:/opt/tools/python/install/bin:/home/jenkins/.local/bin:${PATH}"
 
-RUN apt-get update -y && \
-    apt-get install -y libpq-dev && \
-    bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl}' && \
+RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl}' && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0-25ubuntu1_amd64.deb \
     -o /tmp/unzip_6.0-25ubuntu1_amd64.deb && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/universe/libz/libzstd/zstd_1.4.4+dfsg-3_amd64.deb \
@@ -35,9 +33,6 @@ RUN apt-get update -y && \
     chmod +x /opt/tools/kubectl/kubectl && \
     chown -R jenkins:jenkins /opt/tools && \
     pip3 cache purge && \
-    apt-get -y clean autoclean && \
-    apt-get -y autoremove --yes && \
-    rm -rf /var/lib/apt/lists/* && \
     rm -Rf /tmp/*.{zip,tar.gz,deb}
 
 USER jenkins
