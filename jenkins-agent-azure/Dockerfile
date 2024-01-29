@@ -8,7 +8,7 @@ USER root
 ENV PATH="/opt/tools/terraform:/opt/tools/packer:/opt/tools/helm/linux-amd64:\
 /opt/tools/kubectl:/opt/tools/python/install/bin:/home/jenkins/.local/bin:${PATH}"
 
-RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl}' && \
+RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane}' && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0-25ubuntu1_amd64.deb \
     -o /tmp/unzip_6.0-25ubuntu1_amd64.deb && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/universe/libz/libzstd/zstd_1.4.4+dfsg-3_amd64.deb \
@@ -31,6 +31,9 @@ RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl}' && \
     curl -L https://dl.k8s.io/release/v1.28.3/bin/linux/amd64/kubectl \
     -o /opt/tools/kubectl/kubectl && \
     chmod +x /opt/tools/kubectl/kubectl && \
+    curl -L https://github.com/google/go-containerregistry/releases/download/v0.17.0/go-containerregistry_Linux_x86_64.tar.gz \
+    -o /tmp/go-containerregistry_Linux_x86_64.tar.gz && \
+    tar -xf /tmp/go-containerregistry_Linux_x86_64.tar.gz -C /opt/tools/crane/ && \
     chown -R jenkins:jenkins /opt/tools && \
     pip3 cache purge && \
     rm -Rf /tmp/*.{zip,tar.gz,deb}
