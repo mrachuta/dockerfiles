@@ -7,7 +7,7 @@ USER root
 
 WORKDIR /azp/
 
-COPY ./start.sh ./
+COPY ./context/start.sh ./
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -22,9 +22,9 @@ RUN chmod +x ./start.sh && \
     AZ_REPO=$(lsb_release -cs) && \
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
     tee /etc/apt/sources.list.d/azure-cli.list && \
-    curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg && \
-    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | \
-    tee /etc/apt/sources.list.d/kubernetes.list && \
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && \
+    echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | \ 
+    sudo tee /etc/apt/sources.list.d/kubernetes.list && \
     curl https://baltocdn.com/helm/signing.asc | apt-key add - && \
     echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
     apt-get update -y && \
