@@ -1,0 +1,40 @@
+FROM ubuntu:22.04
+
+LABEL version="1.0"
+LABEL maintainer="mrachuta"
+
+USER root
+
+WORKDIR /azp/
+
+COPY ./start.sh ./
+
+# Install basic tools
+RUN chmod +x ./start.sh && \
+    useradd -m -d /home/agent agent && \
+    chown -R agent:agent /azp /home/agent && \
+    apt-get update -y && \
+    apt-get install -y ca-certificates curl apt-transport-https lsb-release gnupg && \
+    curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | \
+    tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null && \
+    AZ_REPO=$(lsb_release -cs) && \
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
+    tee /etc/apt/sources.list.d/azure-cli.list && \
+    curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | \
+    tee /etc/apt/sources.list.d/kubernetes.list && \
+    curl https://baltocdn.com/helm/signing.asc | apt-key add - && \
+    echo "deb https://baltocdn.com/helm/stable/debian/ all main" | tee /etc/apt/sources.list.d/helm-stable-debian.list && \
+    apt-get update -y && \
+    apt-get install -y libpq-dev python3-pip docker-ce python-is-python3 && \
+    azure-cli kubectl helm podman podman-docker openjdk-17-jre maven && \
+    apt autoremove -y && \
+    apt clean -y && \
+
+ENV PATH="${HOME}/.local/bin:${PATH}"
+
+USER agent
+# Another option is to run the agent as root.
+# ENV AGENT_ALLOW_RUNASROOT="true"
+
+ENTRYPOINT [ "./start.sh" ]
