@@ -9,6 +9,8 @@ WORKDIR /azp/
 
 COPY ./start.sh ./
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 # Install basic tools
 RUN chmod +x ./start.sh && \
     useradd -m -d /home/agent agent && \
