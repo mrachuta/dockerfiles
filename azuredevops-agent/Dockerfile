@@ -30,7 +30,7 @@ RUN chmod +x ./start.sh && \
     echo "deb https://baltocdn.com/helm/stable/debian/ all main" | \
     tee /etc/apt/sources.list.d/helm-stable-debian.list && \
     apt-get update -y && \
-    apt-get install -y libpq-dev python3-pip python-is-python3 \
+    apt-get install -y jq \libpq-dev python3-pip python-is-python3 \
     azure-cli kubectl helm podman podman-docker openjdk-17-jre maven && \
     apt-get remove openjdk-11-jre-headless && \
     apt autoremove -y && \
