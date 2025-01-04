@@ -23,7 +23,7 @@ RUN chmod +x ./start.sh && \
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
     tee /etc/apt/sources.list.d/azure-cli.list && \
     curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | \
-    sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && \
+    gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && \
     echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | \ 
     tee /etc/apt/sources.list.d/kubernetes.list && \
     curl https://baltocdn.com/helm/signing.asc | apt-key add - && \
