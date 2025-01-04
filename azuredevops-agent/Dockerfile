@@ -32,6 +32,7 @@ RUN chmod +x ./start.sh && \
     apt-get update -y && \
     apt-get install -y libpq-dev python3-pip python-is-python3 \
     azure-cli kubectl helm podman podman-docker openjdk-17-jre maven && \
+    apt-get remove openjdk-11-jre-headless && \
     apt autoremove -y && \
     apt clean -y
 
