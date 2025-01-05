@@ -36,7 +36,8 @@ RUN chmod +x ./start.sh && \
     apt autoremove -y && \
     apt clean -y
 
-ENV PATH="${HOME}/.local/bin:${PATH}"
+ENV PATH="${HOME}/.local/bin:${PATH}" \
+    TARGETARCH="linux-x64"
 
 USER agent
 # Another option is to run the agent as root.
