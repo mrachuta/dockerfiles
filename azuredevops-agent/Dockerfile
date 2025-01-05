@@ -1,46 +1,29 @@
-FROM ubuntu:22.04
+FROM quay.io/podman/stable
 
-LABEL version="1.0"
-LABEL maintainer="mrachuta"
+LABEL version="1.0" \
+    maintainer="mrachuta"
 
 USER root
 
 WORKDIR /azp/
 
-COPY ./context/start.sh ./
-
-ARG DEBIAN_FRONTEND=noninteractive
+ADD ./context/start.sh ./start.sh
 
 # Install basic tools
 RUN chmod +x ./start.sh && \
-    useradd -m -d /home/agent agent && \
-    chown -R agent:agent /azp /home/agent && \
-    apt-get update -y && \
-    apt-get install -y ca-certificates curl apt-transport-https lsb-release gnupg && \
-    curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | \
-    tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null && \
-    AZ_REPO=$(lsb_release -cs) && \
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
-    tee /etc/apt/sources.list.d/azure-cli.list && \
-    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.31/deb/Release.key | \
-    gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg && \
-    echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.31/deb/ /' | \ 
-    tee /etc/apt/sources.list.d/kubernetes.list && \
-    curl https://baltocdn.com/helm/signing.asc | apt-key add - && \
-    echo "deb https://baltocdn.com/helm/stable/debian/ all main" | \
-    tee /etc/apt/sources.list.d/helm-stable-debian.list && \
-    apt-get update -y && \
-    apt-get install -y curl git jq libicu70 libpq-dev python3-pip python-is-python3 \
-    azure-cli kubectl helm podman podman-docker openjdk-17-jre maven && \
-    apt-get remove -y openjdk-11-jre-headless && \
-    apt autoremove -y && \
-    apt clean -y
+    rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
+    dnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm && \
+    dnf install -y azure-cli maven java-17-openjdk && \
+    dnf clean all && \
+    rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
-ENV PATH="${HOME}/.local/bin:${PATH}" \
-    TARGETARCH="linux-x64"
-
-USER agent
+USER podman
 # Another option is to run the agent as root.
-# ENV AGENT_ALLOW_RUNASROOT="true"
+#ENV AGENT_ALLOW_RUNASROOT="true"
+
+ENV PATH="${HOME}/.local/bin:/kaniko:${PATH}" \
+    TARGETARCH="linux-x64" \
+    _CONTAINERS_USERNS_CONFIGURED="" \
+    BUILDAH_ISOLATION=chroot
 
 ENTRYPOINT [ "./start.sh" ]
