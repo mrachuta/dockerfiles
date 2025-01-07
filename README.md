@@ -12,6 +12,7 @@ dockerfiles - Jenkins pipeline and a set of Dockerfiles used to build containers
 - [python-webdev](#python-webdev)
 - [redhat8-ansible](#redhat8-ansible)
 - [ubuntu-ansible](#ubuntu-ansible)
+- [azuredevops-agent](#azuredevops-agent)
 
 ## General info
 Jenkinsfile to be used together with kaniko to build Docker image in kubernetes custer.
@@ -58,3 +59,12 @@ Image equpied with Ansible. To bo used during testing of Ansible resources.
 Image equpied with Ansible. To bo used during testing of Ansible resources.
 * python 3.11
 * ansible-core 2.12
+
+## azuredevops-agent
+Image used to run AzureDevops agent in containers. 
+Build using following guidelines: https://learn.microsoft.com/en-us/azure/devops/pipelines/agents/docker?view=azure-devops#linux
+Contains following tools:
+* azure-cli
+* podman
+* openjdk-17
+* maven
