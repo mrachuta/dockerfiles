@@ -1,6 +1,6 @@
-FROM quay.io/podman/stable
+FROM quay.io/podman/stable:v5.3
 
-LABEL version="1.0" \
+LABEL version="1.1.0" \
     maintainer="mrachuta"
 
 USER root
