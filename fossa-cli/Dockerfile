@@ -1,6 +1,6 @@
-FROM nexus3.k8s.lan:50001/ubuntu:jammy
+FROM nexus3.k8s.lan:50001/ubuntu:noble
 
-LABEL version="1.0"
+LABEL version="2.0.0"
 LABEL maintainer="mrachuta"
 
 # https://github.com/moby/moby/issues/4032#issuecomment-192327844
