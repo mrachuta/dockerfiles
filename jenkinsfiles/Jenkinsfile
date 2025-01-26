@@ -55,6 +55,8 @@ pipeline {
     parameters {
         choice(
             choices: [
+                'azuredevops-agent',
+                'fossa-cli',
                 'jenkins-agent-azure',
                 'jenkins-agent-gcp',
                 'jenkins-agent-python',
