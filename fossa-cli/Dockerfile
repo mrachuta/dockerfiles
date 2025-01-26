@@ -10,7 +10,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # it's required for ansible and sudo access
 RUN apt update && \
     apt install -y curl && \
-    useradd -m -u 1000 -s /bin/bash fossa && \
+    useradd -m -u 1001 -s /bin/bash fossa && \
     apt autoremove -y && \
     apt clean -y && \
     curl -H 'Cache-Control: no-cache' \
