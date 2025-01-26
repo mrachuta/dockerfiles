@@ -1,4 +1,4 @@
-FROM docker.io/library/3.11-slim-bookworm
+FROM docker.io/library/python:3.11-slim-bookworm
 
 LABEL version="3.11"
 LABEL maintainer="mrachuta"
