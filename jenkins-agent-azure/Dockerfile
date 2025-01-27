@@ -10,7 +10,7 @@ ENV PATH="/opt/tools/terraform:/opt/tools/packer:\
 /opt/tools/rust/cargo/bin:/opt/tools/python/install/bin:\
 /home/jenkins/.local/bin:${PATH}" \
 RUSTUP_HOME="/opt/tools/rust/rustup" \
-CARGO_HOME="/opt/tools/rust/cargo sh"
+CARGO_HOME="/opt/tools/rust/cargo"
 
 
 RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane,rust/rustup,rust/cargo}' && \
