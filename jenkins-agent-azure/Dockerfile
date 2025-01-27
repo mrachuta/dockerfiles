@@ -18,7 +18,7 @@ RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane}' && \
     -o /tmp/cpython-3.13.1+20250115-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst && \
     tar -xf /tmp/cpython-3.13.1+20250115-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst \
     -C /opt/tools && \
-    curl -L https://sh.rustup.rs -o /tmp/rust.sh && chmod +x /tmp/rust.sh && ./tmp/rust.sh -y && \
+    curl -L https://sh.rustup.rs -o /tmp/rust.sh && chmod +x /tmp/rust.sh && /tmp/rust.sh -y && \
     pip3 install az-cli && \
     curl -L https://releases.hashicorp.com/packer/1.12.0/packer_1.12.0_linux_amd64.zip \
     -o /tmp/packer_1.12.0_linux_amd64.zip && \
