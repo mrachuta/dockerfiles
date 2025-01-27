@@ -1,6 +1,6 @@
 FROM nexus3.k8s.lan:50001/jenkins/inbound-agent:jdk21
 
-LABEL version="2.0.0"
+LABEL version="2.0.1"
 LABEL maintainer="mrachuta"
 
 USER root
