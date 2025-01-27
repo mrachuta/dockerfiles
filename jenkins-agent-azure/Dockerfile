@@ -8,7 +8,10 @@ USER root
 ENV PATH="/opt/tools/terraform:/opt/tools/packer:\
 /opt/tools/helm/linux-amd64:/opt/tools/kubectl:\
 /opt/tools/rust/cargo/bin:/opt/tools/python/install/bin:\
-/home/jenkins/.local/bin:${PATH}"
+/home/jenkins/.local/bin:${PATH}" \
+RUSTUP_HOME="/opt/tools/rust/rustup" \
+CARGO_HOME="/opt/tools/rust/cargo sh"
+
 
 RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane,rust/rustup,rust/cargo}' && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0-25ubuntu1_amd64.deb \
@@ -20,8 +23,7 @@ RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane,rust/rustu
     -o /tmp/cpython-3.13.1+20250115-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst && \
     tar -xf /tmp/cpython-3.13.1+20250115-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst \
     -C /opt/tools && \
-    curl https://sh.rustup.rs -sSf | export RUSTUP_HOME=/opt/tools/rust/rustup CARGO_HOME=/opt/tools/rust/cargo sh -s -- \
-    --default-toolchain stable --profile default --no-modify-path -y && \
+    curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable --profile default --no-modify-path -y && \
     pip3 install az-cli && \
     curl -L https://releases.hashicorp.com/packer/1.12.0/packer_1.12.0_linux_amd64.zip \
     -o /tmp/packer_1.12.0_linux_amd64.zip && \
