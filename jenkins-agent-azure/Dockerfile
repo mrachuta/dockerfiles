@@ -14,7 +14,6 @@ RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane}' && \
     apt install build-essential -y && \
     apt autoremove -y && \
     apt clean -y && \
-    pip install checkov && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0-25ubuntu1_amd64.deb \
     -o /tmp/unzip_6.0-25ubuntu1_amd64.deb && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/universe/libz/libzstd/zstd_1.4.4+dfsg-3_amd64.deb \
@@ -24,6 +23,7 @@ RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane}' && \
     -o /tmp/cpython-3.13.1+20250115-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst && \
     tar -xf /tmp/cpython-3.13.1+20250115-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst \
     -C /opt/tools && \
+    pip3 install checkov && \
     pip3 install az-cli && \
     curl -L https://releases.hashicorp.com/packer/1.12.0/packer_1.12.0_linux_amd64.zip \
     -o /tmp/packer_1.12.0_linux_amd64.zip && \
