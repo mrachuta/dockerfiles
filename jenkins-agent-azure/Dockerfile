@@ -7,9 +7,14 @@ USER root
 
 ENV PATH="/opt/tools/terraform:/opt/tools/packer:/opt/tools/helm/linux-amd64:\
 /opt/tools/kubectl:/opt/tools/python/install/bin:/opt/tools/crane:\
-/opt/tools/checkov/dist:/home/jenkins/.local/bin:${PATH}"
+/home/jenkins/.local/bin:${PATH}"
 
-RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane,checkov}' && \
+RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane}' && \
+    apt update && \
+    apt install build-essential && \
+    apt autoremove -y && \
+    apt clean -y && \
+    pip install checkov && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0-25ubuntu1_amd64.deb \
     -o /tmp/unzip_6.0-25ubuntu1_amd64.deb && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/universe/libz/libzstd/zstd_1.4.4+dfsg-3_amd64.deb \
@@ -35,9 +40,6 @@ RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane,checkov}' 
     curl -L https://github.com/google/go-containerregistry/releases/download/v0.20.3/go-containerregistry_Darwin_x86_64.tar.gz \
     -o /tmp/go-containerregistry_Darwin_x86_64.tar.gz && \
     tar -xf /tmp/go-containerregistry_Darwin_x86_64.tar.gz -C /opt/tools/crane/ && \
-    curl -L https://github.com/bridgecrewio/checkov/releases/download/3.2.384/checkov_linux_X86_64.zip \
-    -o /tmp/checkov_linux_X86_64.zip && \
-    unzip /tmp/checkov_linux_X86_64.zip -d /opt/tools/checkov/ && \
     chown -R jenkins:jenkins /opt/tools && \
     pip3 cache purge && \
     rm -Rf /tmp/*.{zip,tar.gz,deb}
