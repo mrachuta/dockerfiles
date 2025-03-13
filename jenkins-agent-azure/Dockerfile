@@ -7,7 +7,7 @@ USER root
 
 ENV PATH="/opt/tools/terraform:/opt/tools/packer:/opt/tools/helm/linux-amd64:\
 /opt/tools/kubectl:/opt/tools/python/install/bin:/opt/tools/crane:\
-/home/jenkins/.local/bin:${PATH}"
+/opt/tools/checkov/dist:/home/jenkins/.local/bin:${PATH}"
 
 RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane,checkov}' && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0-25ubuntu1_amd64.deb \
