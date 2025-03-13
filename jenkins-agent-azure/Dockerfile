@@ -11,7 +11,7 @@ ENV PATH="/opt/tools/terraform:/opt/tools/packer:/opt/tools/helm/linux-amd64:\
 
 RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane}' && \
     apt update && \
-    apt install build-essential && \
+    apt install build-essential -y && \
     apt autoremove -y && \
     apt clean -y && \
     pip install checkov && \
