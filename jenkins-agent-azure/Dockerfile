@@ -1,12 +1,13 @@
 FROM nexus3.k8s.lan:50001/jenkins/inbound-agent:jdk21
 
-LABEL version="2.0.0"
+LABEL version="2.1.0"
 LABEL maintainer="mrachuta"
 
 USER root
 
 ENV PATH="/opt/tools/terraform:/opt/tools/packer:/opt/tools/helm/linux-amd64:\
-/opt/tools/kubectl:/opt/tools/python/install/bin:/home/jenkins/.local/bin:${PATH}"
+/opt/tools/kubectl:/opt/tools/python/install/bin:/opt/tools/crane:\
+/home/jenkins/.local/bin:${PATH}"
 
 RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane}' && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0-25ubuntu1_amd64.deb \
@@ -14,10 +15,11 @@ RUN bash -c 'mkdir -p /opt/tools/{packer,terraform,helm,kubectl,crane}' && \
     curl -L http://archive.ubuntu.com/ubuntu/pool/universe/libz/libzstd/zstd_1.4.4+dfsg-3_amd64.deb \
     -o /tmp/zstd_1.4.4+dfsg-3_amd64.deb && \
     dpkg -i /tmp/unzip_6.0-25ubuntu1_amd64.deb /tmp/zstd_1.4.4+dfsg-3_amd64.deb && \
-    curl -L https://github.com/astral-sh/python-build-standalone/releases/download/20250115/cpython-3.13.1+20250115-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst \
-    -o /tmp/cpython-3.13.1+20250115-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst && \
-    tar -xf /tmp/cpython-3.13.1+20250115-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst \
+    curl -L https://github.com/astral-sh/python-build-standalone/releases/download/20250311/cpython-3.12.9+20250311-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst \
+    -o /tmp/cpython-3.12.9+20250311-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst && \
+    tar -xf /tmp/cpython-3.12.9+20250311-x86_64-unknown-linux-gnu-pgo+lto-full.tar.zst\
     -C /opt/tools && \
+    pip3 install checkov && \
     pip3 install az-cli && \
     curl -L https://releases.hashicorp.com/packer/1.12.0/packer_1.12.0_linux_amd64.zip \
     -o /tmp/packer_1.12.0_linux_amd64.zip && \
