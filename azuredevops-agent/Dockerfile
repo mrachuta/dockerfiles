@@ -15,12 +15,13 @@ RUN chmod +x ./start.sh && \
     curl https://archive.apache.org/dist/maven/maven-3/3.9.1/binaries/apache-maven-3.9.1-bin.tar.gz -o apache-maven-3.9.1-bin.tar.gz && \
     tar -xf apache-maven-3.9.1-bin.tar.gz --no-same-owner --no-same-permissions -C /opt/tools/ && \
     rpm --import https://packages.microsoft.com/keys/microsoft.asc && \
-    dnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm && \
-    dnf install -y azure-cli jq curl git java-17-openjdk java-17-openjdk-devel --exclude=maven && \
-    dnf clean all && \
+    microdnf install -y https://packages.microsoft.com/config/rhel/9.0/packages-microsoft-prod.rpm && \
+    microdnf install -y python3-pip azure-cli jq curl git java-17-openjdk java-17-openjdk-devel --exclude=maven && \
+    microdnf clean all && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.* && \
     update-alternatives --install /usr/bin/docker docker /usr/bin/podman 1 && \
     update-alternatives --install /usr/bin/mvn mvn /opt/tools/apache-maven-3.9.1/bin/mvn 1 && \
+    pip3 install parse-changelog && \
     chown -R podman:podman /azp
 
 USER podman
